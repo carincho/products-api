@@ -2,6 +2,7 @@ package com.carincho.course.springcloud.kafka.api.services;
 
 import com.carincho.course.springcloud.kafka.api.messaging.ReplyInbox;
 import com.carincho.course.springcloud.kafka.api.models.Command;
+import com.carincho.course.springcloud.kafka.api.models.CommandType;
 import com.carincho.course.springcloud.kafka.api.models.Reply;
 import com.carincho.course.springcloud.kafka.api.models.dto.ProductDto;
 import org.slf4j.Logger;
@@ -36,39 +37,34 @@ public class ProductCommandServiceImpl implements  ProductCommandService {
     @Override
     public  Reply<?> sendCreateAndAwait(ProductDto productDto, Duration timeout) {
 
-        Command<ProductDto> cmd = new Command<>("CREATE", null, productDto);
         //Dar un nombre logico un canal de counicacion un puente un nombre
         //out por que es de salida
 
-        return sendAndAwait(cmd, timeout);
+        return sendAndAwait(new Command<>(CommandType.CREATE, null, productDto), timeout);
 
     }
 
     @Override
     public Reply<?> sendReadAndAwait(Long id, Duration timeout) {
-        Command<ProductDto> cmd = new Command<>("READ", id, null);
-        return sendAndAwait(cmd, timeout);
+        return sendAndAwait(new Command<>(CommandType.READ, id, null), timeout);
     }
 
     @Override
     public Reply<?> sendReadAllAndAwait(Duration timeout) {
-        Command<?> cmd = new Command<>("READ_ALL", null, null);
 
-        return sendAndAwait(cmd, timeout);
+        return sendAndAwait(new Command<>(CommandType.READ_ALL, null, null), timeout);
     }
 
     @Override
     public Reply<?> sendUpdateAndAwait(ProductDto productDto, Long id, Duration timeout) {
-        Command <ProductDto> cmd = new Command<>("UPDATE", id, productDto);
-        return sendAndAwait(cmd, timeout);
+        return sendAndAwait(new Command<>(CommandType.UPDATE, id, productDto), timeout);
     }
 
     @Override
     public Reply<?> sendDeleteAndAwait(Long id, Duration timeout) {
 
-        Command <ProductDto> cmd = new Command<>("DELETE", id, null);
 
-        return sendAndAwait(cmd, timeout);
+        return sendAndAwait(new Command<>(CommandType.DELETE, id, null), timeout);
     }
 
     private Reply<?> sendAndAwait(Command<?> cmd, Duration timeout) {
